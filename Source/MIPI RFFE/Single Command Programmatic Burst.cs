@@ -3,8 +3,8 @@ using System.Text;
 using System.Collections;
 using System.IO;
 using NationalInstruments.ModularInstruments.NIDigital;
-using static NationalInstruments.ReferenceDesignLibraries.Digital;
-using static NationalInstruments.ReferenceDesignLibraries.DigitalProtocols.MIPI_RFFE;
+using NationalInstruments.ReferenceDesignLibraries;
+using  NationalInstruments.ReferenceDesignLibraries.DigitalProtocols;
 
 namespace MIPI_RFFE
 {
@@ -14,20 +14,8 @@ namespace MIPI_RFFE
         {
             string DigitalPath = Path.GetFullPath(@"Digital Project");
 
-            string pinMapPath = Path.Combine(DigitalPath, "PinMap.pinmap");
-            string specPath = Path.Combine(DigitalPath, "Specifications.specs");
-            string levelsPath = Path.Combine(DigitalPath, "PinLevels.digilevels");
-            string timingPath = Path.Combine(DigitalPath, "Timing.digitiming");
-            string[] patternPaths = Directory.GetFiles(Path.Combine(DigitalPath, "RFFE Command Patterns"), "*.digipat");
-
-            ProjectFiles projectFiles = new ProjectFiles
-            {
-                PinMapFile = pinMapPath,
-                SpecificationsFiles = new string[1] { specPath },
-                PinLevelsFiles = new string[1] { levelsPath },
-                TimingFiles = new string[1] { timingPath },
-                DigitalPatternFiles = patternPaths
-            };
+            // Load all digital pattern files found in the directory
+            var projectFiles = Digital.Utilities.SearchForProjectFiles(DigitalPath, true);
 
             //Initialize hardware and load pinmap plus sheets into
             //digital pattern instrument. Most of the fucntions below are
@@ -37,7 +25,8 @@ namespace MIPI_RFFE
             //in the PinMap file
             NIDigital digital = new NIDigital("PXIe-6570", false, false, "");
 
-            LoadProjectFiles(digital, projectFiles);
+            // Download all the located files to the instrument
+            Digital.LoadProjectFiles(digital, projectFiles);
 
             //Turn RFFE bus power on
             digital.PinAndChannelMap.GetPinSet("RFFEVIO").WriteStatic(PinState._1);
@@ -49,17 +38,18 @@ namespace MIPI_RFFE
                 ByteCount = 1
             };
 
+            MipiRffeCommand command = MipiRffe.CreateCommand(CommandType.Reg0Write, regData);
+
             //Trgger type is set to none so burst will start immediately
-            TriggerConfiguration triggerConfig = new TriggerConfiguration {
+            var triggerConfig = new Digital.TriggerConfiguration {
                 BurstTriggerType = TriggerType.None,
             };
 
-            //Burst a Reg0Write command using the data specified in regData
-            BurstRFFE(digital, regData, "RFFEDATA", RFFECommand.Reg0Write, triggerConfig);
+            command.Burst(digital, "RFFEDATA", triggerConfig);
 
             Console.ReadKey();
 
-            DisconnectAndClose(digital);
+            Digital.DisconnectAndClose(digital);
         }
 
     }
