@@ -49,18 +49,9 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="..\..\SolutionInfo.cs">
-      <Link>Properties\SolutionInfo.cs</Link>
-    </Compile>
     <Compile Include="MIPI_RFFE.cs" />
     <Compile Include="Single Command Programmatic Burst.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\..\Digital\Digital.csproj">
-      <Project>{a12f87e8-772d-4dd9-9ae1-e6a72e83f4fe}</Project>
-      <Name>Digital</Name>
-    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <None Include="Digital Project\CaptureWaveform_RegReadExt.digicapture">
@@ -108,6 +99,12 @@
     <None Include="Digital Project\Timing.digitiming">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\Imports\RDLs\Source\Digital\Digital.csproj">
+      <Project>{a12f87e8-772d-4dd9-9ae1-e6a72e83f4fe}</Project>
+      <Name>Digital</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

@@ -63,7 +63,7 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\MIPI RFFE\MIPI RFFE.csproj">
-      <Project>{A049E201-4E13-4B99-A9CC-38D1BC03858F}</Project>
+      <Project>{a049e201-4e13-4b99-a9cc-38d1bc03858f}</Project>
       <Name>MIPI RFFE</Name>
     </ProjectReference>
   </ItemGroup>
