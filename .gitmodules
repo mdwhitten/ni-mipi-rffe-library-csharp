@@ -1,0 +1,3 @@
+[submodule "Imports/RDLs"]
+	path = Imports/RDLs
+	url = https://github.com/NISystemsEngineering/rfic-reference-design-libraries-csharp.git
